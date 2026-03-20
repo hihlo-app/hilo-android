@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp">
+        <TextView
+
+            android:visibility="gone"
+            android:paddingBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="@font/manrope_semibold"
+            android:textColor="@color/white_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/date"
+            android:text="10-11-2024"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingTop="9dp"
+            android:id="@+id/innerLayout"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="3dp"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_10dp_corner_round"
+            android:backgroundTint="@color/gray_303030">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="@drawable/background_left_corners_round"
+                android:backgroundTint="@color/white_40"
+                android:visibility="visible"
+                android:id="@+id/replyLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <View
+                    android:background="@color/theme"
+                    android:layout_width="3dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:id="@+id/replyUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_medium"
+                    android:maxLines="6"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:maxWidth="270dp"
+                    android:minWidth="60dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="3dp"
+                    android:id="@+id/replyUserMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:text="i ma jasnjndf odsanodsa fansdonfas dfoasd fosajdofasd fosad fas dofsaodnfoa dsfoas dojasodfjasd foadsfjoisajdof aoasjdf saodfas dfosajdf aodsf aodsjfoasd "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/replyUserName"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/show_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="270dp"
+                android:minWidth="60dp"
+                android:text="I am doing well, Can we meet tomorrow?"
+                android:textColor="@color/white"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="14sp"
+                android:visibility="visible"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/replyLayout" />
+            <TextView
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/show_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today, 8.36pm"
+                android:textSize="9sp"
+                android:id="@+id/timeView"
+                android:fontFamily="@font/manrope_light"
+                android:textColor="@color/white_DADADA"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

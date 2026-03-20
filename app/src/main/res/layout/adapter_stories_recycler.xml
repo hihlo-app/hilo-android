@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/storyLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginTop="1dp"
+            android:id="@+id/otherStoryCardview"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:background="@drawable/story_gray_border"
+            app:cardCornerRadius="80dp"
+            app:layout_constraintBottom_toTopOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/theme"
+            app:strokeWidth="2dp">
+
+            <com.google.android.material.card.MaterialCardView
+
+                android:layout_width="73dp"
+                android:layout_height="73dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="0.5dp">
+
+                <ImageView
+                    android:id="@+id/otherStoryImageview"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sample_profile" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:backgroundTint="@color/screen_background_black"
+
+            android:id="@+id/myStoryCardView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="6dp"
+            app:cardCornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@id/myStoryGradient"
+            app:layout_constraintEnd_toEndOf="@id/myStoryGradient"
+
+            app:layout_constraintStart_toStartOf="@id/myStoryGradient"
+            app:layout_constraintTop_toTopOf="@id/myStoryGradient">
+
+            <ImageView
+                android:id="@+id/myStoryImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/theme"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sample_profile" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:id="@+id/myStoryGradient"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/story_gradient_border"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/plusBottomRight"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/myStoryGradient"
+            app:layout_constraintEnd_toEndOf="@id/myStoryGradient"
+            android:background="@drawable/bg_circle_stroke">
+
+            <ImageView
+                android:id="@+id/ivPlusIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/plus_icon_pink"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:paddingTop="8dp"
+            android:text="My Story"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/onlineImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="26dp"
+            android:src="@color/theme"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

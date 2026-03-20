@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingVertical="8dp"
+            android:id="@+id/innerLayout"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="23dp"
+            android:layout_marginStart="13dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <View
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/myStoryGradient"
+
+                android:layout_centerInParent="true"
+                android:background="@drawable/gredient_circle"
+                android:gravity="center"
+                />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/userImageCardView"
+                app:cardElevation="0dp"
+                android:layout_margin="2dp"
+                app:cardCornerRadius="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintTop_toTopOf="@id/myStoryGradient"
+                app:layout_constraintBottom_toBottomOf="@id/myStoryGradient"
+                app:layout_constraintEnd_toEndOf="@id/myStoryGradient"
+                app:layout_constraintStart_toStartOf="@id/myStoryGradient">
+
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+            </androidx.cardview.widget.CardView>
+            <ImageView
+                app:layout_constraintBottom_toBottomOf="@+id/myStoryGradient"
+                app:layout_constraintEnd_toEndOf="@id/myStoryGradient"
+                android:id="@+id/onlineStatusImage"
+                android:src="@drawable/online_status_green"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"/>
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:id="@+id/verifiedLayout"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toStartOf="@id/lastMessageTime"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/userId"
+                app:layout_constraintStart_toEndOf="@id/myStoryGradient"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/name"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingEnd="2dp"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/manrope_semibold"
+                    android:textColor="@color/white"
+                    android:text="Abhaysharma"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="10dp" />
+                <ImageView
+                    android:id="@+id/verifiedNameTick"
+                    android:layout_marginStart="-17dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/verified_tick"
+                    app:layout_constraintTop_toTopOf="@id/name"
+
+                    app:layout_constraintBottom_toBottomOf="@+id/name"
+                    app:layout_constraintStart_toEndOf="@id/name"/>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/outgoing_message_status"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/send"
+                app:layout_constraintStart_toEndOf="@id/myStoryGradient"
+                app:layout_constraintTop_toBottomOf="@id/verifiedLayout"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:id="@+id/userId"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginEnd="10dp"
+                android:textSize="11sp"
+                android:fontFamily="@font/manrope_light"
+                android:textColor="@color/white_DADADA"
+                android:text="Abhay_06"
+                app:layout_constraintStart_toEndOf="@id/outgoing_message_status"
+                app:layout_constraintEnd_toStartOf="@+id/incoming_message_status"
+                app:layout_constraintTop_toBottomOf="@id/verifiedLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp" />
+            <ImageView
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/verifiedLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:id="@+id/incoming_message_status"/>
+
+            <TextView
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/verifiedLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:fontFamily="@font/manrope_medium"
+                android:textColor="@color/white_DADADA"
+                android:id="@+id/lastMessageTime"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/userLocation"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginEnd="10dp"
+                android:textSize="13sp"
+                android:fontFamily="@font/manrope_light"
+                android:textColor="@color/white_40"
+                android:text="Abhaysharma"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userId"
+                app:layout_constraintStart_toEndOf="@id/userImageCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/bottomLine"
+            app:layout_constraintTop_toBottomOf="@id/innerLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="23dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/innerLayout"
+            android:background="@color/white_30"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

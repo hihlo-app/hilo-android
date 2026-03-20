@@ -1,0 +1,22 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gradient border background -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <gradient
+                android:startColor="#3D6BFF"
+                android:endColor="@color/theme"
+                android:angle="135"/>
+        </shape>
+    </item>
+
+    <!-- Inner content background with padding for the border -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="17dp" />
+            <solid android:color="@color/screen_background_black" />
+        </shape>
+    </item>
+
+</layer-list>

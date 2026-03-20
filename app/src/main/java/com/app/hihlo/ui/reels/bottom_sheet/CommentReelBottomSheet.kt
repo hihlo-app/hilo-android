@@ -1,0 +1,452 @@
+package com.app.hihlo.ui.reels.bottom_sheet
+
+// Separate updated class for RoundedBottomSheet with pagination support.
+// Assumes your AdapterComments has an additional function like:
+// fun addItems(newItems: List<Comments>) {
+//     val start = this.list.size // Assuming 'list' is the backing list in adapter
+//     this.list.addAll(newItems)
+//     notifyItemRangeInserted(start, newItems.size)
+// }
+// If not, add it to your adapter. Replace 'Comments' with the actual type if different.
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.app.hihlo.R
+import com.app.hihlo.databinding.BottomSheetLayoutBinding
+import com.app.hihlo.model.delete_comment.DeleteToCommentRequest
+import com.app.hihlo.model.get_reel_comments.response.Comment
+import com.app.hihlo.model.get_reel_comments.response.Payload
+import com.app.hihlo.model.login.response.LoginResponse
+import com.app.hihlo.model.post_comments.request.PostCommentsRequest
+import com.app.hihlo.model.reply_to_comment.request.ReplyToCommentRequest
+import com.app.hihlo.network_call.RetrofitBuilder
+import com.app.hihlo.preferences.LOGIN_DATA
+import com.app.hihlo.preferences.Preferences
+import com.app.hihlo.ui.home.view_model.UserPostListViewModel
+import com.app.hihlo.ui.reels.adapter.AdapterComments
+import com.app.hihlo.ui.reels.view_model.ReelsViewModel
+import com.app.hihlo.utils.CommonUtils
+import com.app.hihlo.utils.CommonUtils.toPx
+import com.app.hihlo.utils.RTVariable
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
+import kotlinx.coroutines.launch
+import org.openjdk.tools.javac.util.Position
+import kotlin.getValue
+import androidx.core.graphics.toColorInt
+
+class CommentReelBottomSheet : BottomSheetDialogFragment() {
+    private var _binding: BottomSheetLayoutBinding? = null
+    private val binding get() = _binding!!
+    var onCommentAction: ((PostCommentsRequest) -> Unit)? = null
+    var onReplyAction: ((ReplyToCommentRequest) -> Unit)? = null
+    var onDeleteAction: ((DeleteToCommentRequest) -> Unit)? = null
+    var onLoadMore: ((Int, Int) -> Unit)? = null
+    lateinit var adapter: AdapterComments
+    var isReplySelected = false
+    var commentId = ""
+    private var currentPage = 1
+    private val limit = 10
+    private var isLoading = false
+    private var hasMore = true
+
+    override fun getTheme(): Int = R.style.BottomSheetDialogTheme
+    private val viewModel3: ReelsViewModel by viewModels()
+    private val viewModel2: UserPostListViewModel by viewModels()
+    private var behavior: BottomSheetBehavior<FrameLayout>? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = BottomSheetLayoutBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+
+                // 1. Start half height (peek)
+                val displayMetrics = resources.displayMetrics
+                val screenHeight = displayMetrics.heightPixels
+                val peekHeight = (screenHeight * 0.5).toInt()
+                behavior.peekHeight = requireContext().dpToPx(400)
+
+                // 2. Allow it to expand
+                behavior.isFitToContents = true
+                behavior.skipCollapsed = false
+                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+                // 3. Optional: Set rounded corners
+                val cornerRadius = 25f.toPx(requireContext())
+                val shapeDrawable = MaterialShapeDrawable(
+                    ShapeAppearanceModel.Builder()
+                        .setTopLeftCorner(CornerFamily.ROUNDED, cornerRadius)
+                        .setTopRightCorner(CornerFamily.ROUNDED, cornerRadius)
+                        .build()
+                )
+                shapeDrawable.fillColor = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.bottom_sheet_color))
+                it.background = shapeDrawable
+
+                // 4. Bottom sheet callback for state changes
+                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_COLLAPSED -> {
+                                val params = binding.commentsRecycler.layoutParams
+                                params.height = requireContext().dpToPx(250)
+                                binding.commentsRecycler.layoutParams = params
+                            }
+                            BottomSheetBehavior.STATE_EXPANDED -> {
+                                val params = binding.commentsRecycler.layoutParams
+                                params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                                binding.commentsRecycler.layoutParams = params
+                            }
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        // No-op
+                    }
+                })
+
+                binding.closeLine.setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                    true
+                }
+
+                binding.titleTextView.setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                    true
+                }
+
+                binding.closeLine.setOnClickListener {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+
+                binding.titleTextView.setOnClickListener {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        }
+
+        val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.let {
+            behavior = BottomSheetBehavior.from(it)
+            behavior?.peekHeight = requireContext().dpToPx(400)
+            behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        return dialog
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val payload = arguments?.getParcelable<Payload>("comments")
+        Log.i("TAG", "onViewCreated: " + payload)
+        val initialComments = payload?.comments ?: listOf()
+        adapter = AdapterComments(
+            initialComments.toMutableList(),
+            onReplyClick = { replyText, parentCommentId ->
+                val request = ReplyToCommentRequest(
+                    reply = replyText,
+                    commentId = parentCommentId.toString()
+                )
+                onReplyAction?.invoke(request)
+            },
+            onDeleteClick = { isReply, parentCommentId, itemId ->
+                val dialog = AlertDialog.Builder(requireContext())
+                    .setMessage("Are you sure you want to delete this comment?")
+                    .setPositiveButton("Delete") { d, _ ->
+                        if (isReply) {
+                            if (RTVariable.COMMENT_FROM) {
+                                getSendDeleteReelsComment(
+                                    itemId.toString(),
+                                    2,
+                                    RTVariable.COMMENT_POSITION,
+                                    RTVariable.POST_ID
+                                )
+                            } else {
+                                getSendDeleteComment(
+                                    itemId.toString(),
+                                    2,
+                                    RTVariable.COMMENT_POSITION,
+                                    RTVariable.POST_ID
+                                )
+                            }
+                        } else {
+                            if (RTVariable.COMMENT_FROM) {
+                                getSendDeleteReelsComment(
+                                    parentCommentId.toString(),
+                                    1,
+                                    RTVariable.COMMENT_POSITION,
+                                    RTVariable.POST_ID
+                                )
+                            } else {
+                                getSendDeleteComment(
+                                    parentCommentId.toString(),
+                                    1,
+                                    RTVariable.COMMENT_POSITION,
+                                    RTVariable.POST_ID
+                                )
+                            }
+                        }
+                        d.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { d, _ ->
+                        d.dismiss()
+                    }
+                    .create()
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0D1015")))
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor("#FFFFFF".toColorInt())
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor("#B90A66".toColorInt())
+                val messageText = dialog.findViewById<TextView>(android.R.id.message)
+                messageText?.setTextColor("#FFFFFF".toColorInt())
+            },
+            onReplySelected = { commentId ->
+                isReplySelected = true
+                this.commentId = commentId.toString()
+                binding.commentReplyEdittext.setHint("Reply to comment...")
+                CommonUtils.openKeyboard(binding.commentReplyEdittext)
+            }
+        )
+        hasMore = initialComments.size >= limit
+        Glide.with(requireContext()).load(Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.profileImage).placeholder(R.drawable.profile_placeholder).error(R.drawable.profile_placeholder).into(binding.userImage)
+        binding.commentsRecycler.adapter = adapter
+        binding.commentsRecycler.isNestedScrollingEnabled = true
+        binding.commentsRecycler.setPadding(
+            binding.commentsRecycler.paddingLeft,
+            binding.commentsRecycler.paddingTop,
+            binding.commentsRecycler.paddingRight,
+            requireContext().dpToPx(70) // compose box height approx
+        )
+
+        binding.commentsRecycler.clipToPadding = false
+
+        // ADD THIS SCROLL LISTENER HERE - AFTER RECYCLERVIEW IS SET UP
+        binding.commentsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    Log.d("SCROLL", "User started dragging - expanding")
+                    behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                // Expand when scrolling in any direction
+                if (behavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
+                    behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        })
+
+        setupPagination()
+        binding.sendButton.setOnClickListener {
+            if (binding.commentReplyEdittext.text.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter something!", Toast.LENGTH_SHORT).show()
+            } else {
+                if (isReplySelected) {
+                    isReplySelected = false
+                    var request = ReplyToCommentRequest(reply = binding.commentReplyEdittext.text.toString(), commentId)
+                    onReplyAction?.invoke(request)  // Pass any data here
+                } else {
+                    hitPostCommentApi()
+                }
+            }
+        }
+        binding.commentReplyEdittext.requestFocus()
+    }
+
+    private fun setupPagination() {
+        binding.commentsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy <= 0) return // Only load when scrolling down
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                if (!isLoading && hasMore && (firstVisibleItemPosition + visibleItemCount) >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    loadMore()
+                }
+            }
+        })
+    }
+
+    private fun loadMore() {
+        isLoading = true
+        currentPage++
+        onLoadMore?.invoke(currentPage, limit)
+    }
+
+    private fun getSelectedReply(replyText: String, commentId: Int) {
+        if (replyText.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter something!", Toast.LENGTH_SHORT).show()
+        } else {
+            var request = ReplyToCommentRequest(reply = replyText, commentId.toString())
+            onReplyAction?.invoke(request)
+        }
+    }
+
+    private fun getSelectedDelete(replyText: String, commentId: Int) {
+        if (replyText.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter something!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Please enter something!", Toast.LENGTH_SHORT).show()
+            //var request = ReplyToCommentRequest(reply = replyText, commentId.toString())
+            //onReplyAction?.invoke(request)
+        }
+    }
+
+    private fun hitPostCommentApi() {
+        var request = PostCommentsRequest(comment = binding.commentReplyEdittext.text.toString())
+        onCommentAction?.invoke(request)  // Pass any data here
+    }
+
+    fun updateComments(payload: Payload) {
+        adapter.updateList(payload.comments)
+        currentPage = 1
+        hasMore = payload.comments.size >= limit
+        binding.commentReplyEdittext.setText("")
+        binding.root.post {
+            binding.commentReplyEdittext.clearFocus()
+            CommonUtils.hideEdittextKeyboard(binding.commentReplyEdittext)
+        }
+        if (payload.comments.isNotEmpty()) {
+            binding.commentsRecycler.scrollToPosition(0)
+        }
+    }
+
+    fun appendComments(newComments: List<Comment>) { // Replace 'Comments' with actual type
+        if (newComments.size < limit) {
+            hasMore = false
+        }
+        adapter.addItems(newComments)
+        isLoading = false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    fun Context.dpToPx(dp: Int): Int =
+        (dp * resources.displayMetrics.density).toInt()
+
+    private fun Float.toPx(context: Context): Float {
+        return this * context.resources.displayMetrics.density
+    }
+
+    private fun getSendDeleteComment(comment_id: String, mode: Int, position: Int, post_id: String){
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = RetrofitBuilder.apiService.deletePostComment(
+                    token = "Bearer " + Preferences.getCustomModelPreference<LoginResponse>(
+                        requireContext(),
+                        LOGIN_DATA
+                    )?.payload?.authToken,
+                    commentId = comment_id,
+                    mode = mode.toString(),
+                    post_id = post_id
+                )
+                if (response.status == 1 && response.code == 200) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Comment deleted successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val comment_count = response.payload.comment_count
+                    RTVariable.COMMENT_COUNT = comment_count
+                    Log.e("COMMENT_COUNT", "COMMENT_COUNT ${comment_count}")
+                    viewModel2.hitGetReelCommentsApi("Bearer " + Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken, RTVariable.POST_ID, "1", "10")
+                    adapter.removeItems(mode, position)
+//                    if (mode == 2) {
+//                        adapter.adapter.removeItems(position)
+//                        adapter.adapter.notifyDataSetChanged()
+//                    }
+                    RTVariable.COMMENT_DELETED = true
+                } else {
+                    Toast.makeText(requireContext(), response.message ?: "Failed", Toast.LENGTH_SHORT).show()
+                }
+            }catch (e: Exception) {
+            }
+        }
+    }
+
+    private fun getSendDeleteReelsComment(comment_id: String, mode: Int, position: Int, post_id: String){
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = RetrofitBuilder.apiService.deleteReelsComment(
+                    token = "Bearer " + Preferences.getCustomModelPreference<LoginResponse>(
+                        requireContext(),
+                        LOGIN_DATA
+                    )?.payload?.authToken,
+                    commentId = comment_id,
+                    mode = mode.toString(),
+                    post_id = post_id
+                )
+                if (response.status == 1 && response.code == 200) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Comment deleted successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val comment_count = response.payload.comment_count
+                    RTVariable.COMMENT_COUNT = comment_count
+                    Log.e("COMMENT_COUNT", "COMMENT_COUNT ${comment_count} POS: ${position}")
+
+                    adapter.removeItems(mode, position)
+                    RTVariable.COMMENT_DELETED = true
+                    //viewModel3.hitGetReelsApi("Bearer "+ Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken, RTVariable.REELS_CURRENT_PAGE.toString(), "6")
+//                    if (mode == 2) {
+//                        adapter.adapter.removeItems(position)
+//                        adapter.adapter.notifyDataSetChanged()
+//                    }
+
+                } else {
+                    Toast.makeText(requireContext(), response.message ?: "Failed", Toast.LENGTH_SHORT).show()
+                }
+            }catch (e: Exception) {
+            }
+        }
+    }
+}

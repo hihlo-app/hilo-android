@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <TextView
+        android:layout_marginStart="10dp"
+        android:id="@+id/predefinedText"
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="40dp"
+        android:background="@drawable/background_10dp_corner_round"
+        android:backgroundTint="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/manrope_regular"
+        android:text="How are you?">
+
+    </TextView>
+</layout>

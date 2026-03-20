@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp">
+        <TextView
+            android:visibility="gone"
+            android:paddingBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="@font/manrope_semibold"
+            android:textColor="@color/white_40"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/date"
+            android:text="qwerty"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingTop="9dp"
+            android:id="@+id/innerLayout"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_10dp_corner_round"
+            android:backgroundTint="@color/theme">
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--              -->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:background="@drawable/background_left_corners_round"-->
+<!--                android:backgroundTint="@color/white_40"-->
+<!--                android:visibility="visible"-->
+<!--                android:id="@+id/replyLayout"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent">-->
+<!--                <View-->
+<!--                    android:background="@color/white"-->
+<!--                    android:layout_width="3dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"/>-->
+<!--                <TextView-->
+<!--                    android:visibility="gone"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginStart="10dp"-->
+<!--                    android:id="@+id/replyUserName"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:fontFamily="@font/manrope_medium"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:text=""-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:layout_marginEnd="10dp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+<!--                <TextView-->
+<!--                    android:layout_marginStart="10dp"-->
+<!--                    android:layout_marginBottom="3dp"-->
+<!--                    android:id="@+id/replyUserMessage"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:fontFamily="@font/manrope_regular"-->
+<!--                    android:text="i ma jasnjndf odsanodsa fansdonfas dfoasd fosajdofasd fosad fas dofsaodnfoa dsfoas dojasodfjasd foadsfjoisajdof aoasjdf saodfas dfosajdf aodsf aodsjfoasd "-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:layout_marginEnd="10dp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/replyUserName"/>-->
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+            <TextView
+                android:background="@drawable/background_left_corners_round"
+                android:backgroundTint="@color/white_40"
+                android:visibility="visible"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:maxWidth="270dp"
+                android:minWidth="60dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:layout_marginBottom="3dp"
+                android:id="@+id/replyUserMessage"
+                android:fontFamily="@font/manrope_regular"
+                android:text="i ma jasnjndf odsanodsa fansdonfas dfoasd fosajdofasd fosad fas dofsaodnfoa dsfoas dojasodfjasd foadsfjoisajdof aoasjdf saodfas dfosajdf aodsf aodsjfoasd "
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_marginEnd="10dp"/>
+
+                            <View
+                                android:background="@color/white"
+                                android:layout_width="3dp"
+                                android:layout_height="0dp"
+                                app:layout_constraintStart_toStartOf="@id/replyUserMessage"
+                                app:layout_constraintTop_toTopOf="@id/replyUserMessage"
+                                app:layout_constraintBottom_toBottomOf="@id/replyUserMessage"/>
+            <TextView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/replyUserMessage"
+                android:maxWidth="270dp"
+                android:minWidth="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/show_message"
+                android:visibility="visible"
+                android:textColor="@color/white"
+                android:text=""
+                android:paddingEnd="10dp"
+                android:fontFamily="@font/manrope_regular"
+                android:textSize="14sp" />
+            <TextView
+                app:layout_constraintEnd_toStartOf="@id/statusIcon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/show_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                app:layout_goneMarginStart="10dp"
+                android:text="Today, 8.34pm"
+                android:textSize="9sp"
+                android:id="@+id/timeView"
+                android:textColor="#DADADA"
+                android:fontFamily="@font/manrope_light"
+                android:layout_marginStart="5dp" />
+            <ImageView
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/show_message"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                android:layout_marginStart="5dp"
+                android:id="@+id/statusIcon"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/send" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/innerLayout"
+            android:text="🥰"
+            android:layout_marginTop="-7dp"
+            android:layout_marginEnd="10dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="15dp"
+            android:layout_marginHorizontal="20dp"
+            android:id="@+id/dialogRoot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@color/gray_303030"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:gravity="center_horizontal"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/dialogTitle"
+                    android:text="Title"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/manrope_medium"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/dialogDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="Description here"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/manrope_semibold"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/horizontalView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DDD" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:paddingVertical="10dp"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:id="@+id/btnYes"
+                        android:text="Yes"
+                        android:textSize="18sp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/manrope_medium"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#DDD" />
+
+                    <TextView
+                        android:paddingVertical="10dp"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:id="@+id/btnNo"
+                        android:text="No"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/manrope_medium"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+</layout>

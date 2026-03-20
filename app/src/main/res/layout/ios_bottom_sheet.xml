@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ios_handle" />
+
+    <!-- Blur Container -->
+    <LinearLayout
+        android:id="@+id/blurContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingBottom="32dp"
+        android:background="@drawable/ios_blur_background">
+
+        <!-- Upload Post Button -->
+        <FrameLayout
+            android:id="@+id/uploadPostFrame"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Blurred Background -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ios_button_blur_background" />
+
+            <!-- Clear Text -->
+            <TextView
+                android:id="@+id/btnUploadPost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Upload Post"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@android:color/transparent" />
+        </FrameLayout>
+
+        <!-- Upload Reel Button -->
+        <FrameLayout
+            android:id="@+id/uploadReelFrame"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Blurred Background -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ios_button_blur_background" />
+
+            <!-- Clear Text -->
+            <TextView
+                android:id="@+id/btnUploadReel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Upload Reel"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@android:color/transparent" />
+        </FrameLayout>
+
+        <!-- Cancel Button -->
+        <FrameLayout
+            android:id="@+id/cancelFrame"
+            android:layout_width="match_parent"
+            android:layout_height="54dp">
+
+            <!-- Blurred Background -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ios_cancel_blur_background" />
+
+            <!-- Clear Text -->
+            <TextView
+                android:id="@+id/btnCancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Cancel"
+                android:textColor="#007AFF"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@android:color/transparent" />
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>

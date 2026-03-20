@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recharge_coin_nav"
+    app:startDestination="@id/viewAdsFragment">
+    <fragment
+        android:id="@+id/viewAdsFragment"
+        android:name="com.app.hihlo.ui.chat.fragment.ViewAdsFragment"
+        android:label="ViewAdsFragment" />
+    <fragment
+        android:id="@+id/openAdFragment"
+        android:name="com.app.hihlo.ui.chat.fragment.OpenAdFragment"
+        android:label="OpenAdFragment" />
+</navigation>

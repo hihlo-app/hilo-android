@@ -1,0 +1,226 @@
+package com.app.hihlo.ui.profile.fragment.profile_view_pager
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.app.hihlo.R
+import com.app.hihlo.databinding.AdapterShowMediaViewPagerBinding
+import com.app.hihlo.model.get_profile.Posts
+import com.app.hihlo.model.home.response.Post
+import com.app.hihlo.model.login.response.LoginResponse
+import com.app.hihlo.model.reel.response.Pagination
+import com.app.hihlo.model.reel.response.Payload
+import com.app.hihlo.preferences.LOGIN_DATA
+import com.app.hihlo.preferences.Preferences
+import com.app.hihlo.ui.home.bottom_sheet.ViewPostBottomSheetFragment
+import com.app.hihlo.ui.profile.adapter.AdapterProfileMedia
+import com.app.hihlo.ui.profile.fragment.PaginatingFragment
+import com.app.hihlo.ui.profile.fragment.ProfileFragmentDirections
+import com.app.hihlo.ui.profile.view_model.ProfilePostViewModel
+import com.app.hihlo.utils.network_utils.ProcessDialog
+import com.app.hihlo.utils.network_utils.Status
+import com.google.gson.Gson
+import kotlin.getValue
+
+class ProfilePostsFragment : Fragment(), PaginatingFragment {
+
+    private var _binding: AdapterShowMediaViewPagerBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var posts: Posts
+    private lateinit var isMyProfile: String
+    private lateinit var userId: String
+    private val viewModel: ProfilePostViewModel by viewModels()
+    private var isLoading = true
+    private var currentPage=1
+    private lateinit var adapter:AdapterProfileMedia
+
+
+
+    companion object {
+        fun newInstance(posts: Posts, isMyProfile: String, userId: String) = ProfilePostsFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable("posts_data", posts)
+                putString("isMyProfile", isMyProfile)
+                putString("userId", userId)
+            }
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = AdapterShowMediaViewPagerBinding.inflate(inflater, container, false)
+        posts = requireArguments().getParcelable("posts_data")!!
+        isMyProfile = requireArguments().getString("isMyProfile")!!
+        userId = requireArguments().getString("userId")!!
+        Log.i("TAG", "onCreateView pf: "+userId)
+        Log.i("TAG", "onCreateView pf: "+isMyProfile)
+        Log.i("TAG", "onCreateView pf: "+posts)
+        if (posts.pagination.total==0){
+            binding.noPostsFoundPlaceholder.isVisible=true
+            binding.placeholderImage.isVisible=false
+            binding.noPostsFoundPlaceholderText.text = if (isMyProfile=="1") "Create your First Post" else "No Post"
+        }else{
+            binding.noPostsFoundPlaceholder.isVisible=false
+        }
+        adapter = AdapterProfileMedia(posts) { position ->
+            getSelectedPost(position)
+        }
+        binding.showMediaRecycler.adapter = adapter
+
+//        setPagination()
+        return binding.root
+    }
+
+    private fun getSelectedPost(reelPosition: Int){
+//        val from = if (posts.data.get(reelPosition).user_id==Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.userId) "own" else "other"
+
+        findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToUserPostListFragment(arrayOf(), posts, "profile", reelPosition.toString()))
+//        findNavController().navigate(R.id.userPostListFragment)
+    }
+
+    private fun openViewPostBottomSheet(post: Post) {
+
+
+        val viewPostBottomSheetFragment = ViewPostBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable("post", post)
+            }
+        }
+
+        viewPostBottomSheetFragment.show(requireActivity().supportFragmentManager, null)
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setObserver()
+    }
+    private fun hitMyProfileApi(page: Int) {
+        viewModel.hitProfileDataApi("Bearer "+ Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken, page.toString(), "14")
+    }
+    private fun hitOtherUserApi(page: Int) {
+        viewModel.hitOtherUserProfileDataApi("Bearer "+ Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken, userId, page.toString(), "14")
+    }
+    private fun setPagination() {
+        binding.showMediaRecycler.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                Log.i("TAG", "onScrolled: "+layoutManager?.findLastVisibleItemPosition())
+                if (layoutManager?.findLastVisibleItemPosition() == adapter.itemCount - 3) {
+                    if (isLoading) {
+                        currentPage++
+                        if (isMyProfile=="1"){
+                            hitMyProfileApi(currentPage)
+                        }else{
+                            hitOtherUserApi(currentPage)
+                        }
+                    }
+                    isLoading = false
+                }
+            }
+        })
+    }
+    private fun setObserver() {
+        viewModel.getProfileLiveData().observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    Log.e("TAG", "Reels success: ${Gson().toJson(it)}")
+                    if (it.data?.status==1){
+                        if (it.data.code == 200){
+                            if (it.data.payload.posts.data.isNotEmpty()){
+                                isLoading=true
+                                if (currentPage == 1) {
+                                    if (it.data.payload.posts.data.isNotEmpty()){
+                                        adapter.clearList()
+                                        adapter.updateList(it.data.payload.posts)
+                                    }else{
+                                        adapter.clearList()
+                                    }
+                                } else {
+                                    adapter.updateList(it.data.payload.posts)
+                                }
+                            }
+                        }else{
+                            Toast.makeText(requireContext(), it.data.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }else{
+                        Toast.makeText(requireContext(), "${it.data?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    ProcessDialog.dismissDialog(true)
+                }
+                Status.LOADING -> {
+                    ProcessDialog.showDialog(requireContext(), true)
+                }
+                Status.ERROR -> {
+                    Log.e("TAG", "Login Failed: ${it.message}")
+                    ProcessDialog.dismissDialog(true)
+                }
+            }
+        }
+        viewModel.getOtherUserProfileLiveData().observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    Log.e("TAG", "Posts success: ${Gson().toJson(it)}")
+                    if (it.data?.status==1){
+                        if (it.data.code == 200){
+                            if (it.data.payload.posts.data.isNotEmpty()){
+                                isLoading=true
+                            }
+                            if (currentPage == 1) {
+                                if (it.data.payload.posts.data.isNotEmpty()){
+                                    adapter.clearList()
+                                    adapter.updateList(it.data.payload.posts)
+                                }else{
+                                    adapter.clearList()
+                                }
+                            } else {
+                                adapter.updateList(it.data.payload.posts)
+                            }
+                        }else{
+                            Toast.makeText(requireContext(), it.data.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }else{
+                        Toast.makeText(requireContext(), "${it.data?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    ProcessDialog.dismissDialog(true)
+                }
+                Status.LOADING -> {
+                    ProcessDialog.showDialog(requireContext(), true)
+                }
+                Status.ERROR -> {
+                    Log.e("TAG", "Login Failed: ${it.message}")
+                    ProcessDialog.dismissDialog(true)
+                }
+            }
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onParentScrolledToBottom() {
+        if (isLoading) {
+            currentPage++
+            if (isMyProfile=="1"){
+                hitMyProfileApi(currentPage)
+            }else{
+                hitOtherUserApi(currentPage)
+            }
+        }
+        isLoading = false
+    }
+}

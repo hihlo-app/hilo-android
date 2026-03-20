@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="13dp"
+            android:text="Name"
+            android:fontFamily="@font/manrope_medium"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="9dp"
+            android:padding="15dp"
+            android:hint="Enter your name"
+            android:background="@drawable/background_7dp_corner_no_stroke"
+            android:backgroundTint="#282828"
+            android:text="Name"
+            android:textColorHint="#BFBBBB"
+            android:fontFamily="@font/manrope_regular"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="9dp"
+            android:padding="15dp"
+            android:hint="Enter your name"
+            android:background="@null"
+            android:backgroundTint="#282828"
+            android:text="Name"
+            android:textColorHint="#BFBBBB"
+            android:fontFamily="@font/manrope_regular"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base blur layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#80FFFFFF" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+    <!-- Glass overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#60FFFFFF"
+                android:centerColor="#40FFFFFF"
+                android:endColor="#30FFFFFF"
+                android:angle="90" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+    <!-- Subtle highlight -->
+    <item android:top="1dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#50FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:angle="90" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+</layer-list>

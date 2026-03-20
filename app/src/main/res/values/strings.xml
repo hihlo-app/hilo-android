@@ -1,0 +1,62 @@
+<resources>
+    <string name="default_web_client_id">810492134429-729kklruqrrgvnjgdr1or7ie9031nt5m.apps.googleusercontent.com</string>
+
+    <string name="app_name">HiHlo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings">Settings</string>
+    <string name="name">Name</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_your_profile_picture">Change your profile picture</string>
+    <string name="user_name">User Name</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="forgot_password">Forgot Password ?</string>
+    <string name="login">Login</string>
+    <string name="welcome_to_hihlo">Welcome to HiHlo</string>
+    <string name="email">Email</string>
+    <string name="enter_email">Enter Your Email</string>
+    <string name="password">Password</string>
+    <string name="enter_passowrd">Enter Your Password</string>
+    <string name="i_agree_to_terms_amp_conditions_and_privacy_policy_of_the_app"><![CDATA[I agree to Terms & Conditions and Privacy Policy of the App]]></string>
+    <string name="or_with">Or With</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="your_email">Your Email</string>
+    <string name="enter_you_email">Enter you email</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="you_need_to_unable_the_camera_permission_from_settings">You need to enable the Camera permission from settings to make a call!</string>
+    <string name="you_need_to_unable_the_notification_permission_from_settings">You need to enable Notification permission from settings to make a call!</string>
+    <string name="you_need_to_unable_the_microphone_permission_from_settings">You need to enable Microphone permission from settings to make a call!</string>
+    <string name="choose_photos_that_capture_your_personality_and_the_things_you_love_to_do">Choose photos that capture your personality and the things you love to do.</string>
+    <string name="submit">Submit</string>
+    <string name="some_error_occurred_please_try_again">Some error occurred! Please try again.</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="enter_confirm_new_password">Enter confirm new password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="enter_your_message_here">Enter Your Message Here</string>
+    <string name="contact_us">Contact Us</string>
+
+    <string name="recording_playing">Recording playing!</string>
+    <string name="error_recording_playing">Error playing recording</string>
+    <string name="recording_pause">Recording Pause!</string>
+    <string name="recording_started">Recording started!</string>
+    <string name="failed_to_start_recording">Failed to start recording</string>
+    <string name="recording_time_is_too_short">Recording time is too short</string>
+    <string name="tap_and_hold_button_to_record_audio">Tap and hold button to record audio.</string>
+    <string name="microphone_permission_is_not_granted">Microphone permission is not granted.</string>
+    <string name="permission_not_granted">Permissions not granted</string>
+    <string name="re_enter_your_password">Re - Enter Your Password</string>
+    <string name="please_enter_your_phone_number_for_verification">Please enter your phone number for verification</string>
+    <string name="no_recent_chats">No Chat</string>
+
+
+    <string-array name="City">
+        <item>Choose</item>
+        <item>India</item>
+    </string-array>
+    <string-array name="Gender">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Others</item>
+    </string-array>
+</resources>

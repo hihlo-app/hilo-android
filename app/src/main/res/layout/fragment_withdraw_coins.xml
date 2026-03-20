@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="40dp"
+        android:background="@color/screen_background_black">
+
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/llBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:paddingVertical="5dp"
+                android:layout_marginVertical="20dp"
+                android:src="@drawable/back_button_pink"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Withdrawl Coins"
+                android:textSize="22sp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:fontFamily="@font/manrope_semibold"/>
+        </LinearLayout>
+
+
+        <ScrollView
+            app:layout_constraintTop_toBottomOf="@id/llBack"
+            app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true">
+            <LinearLayout
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:id="@+id/clMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Number of Coins"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_semibold"/>
+                <LinearLayout
+                    android:paddingHorizontal="20dp"
+                    android:background="@drawable/background_round_corners"
+                    android:backgroundTint="@color/theme"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/coin_icon"/>
+                    <EditText
+                        android:inputType="number"
+                        android:id="@+id/withdrawCoins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Number of Coins"
+                        android:textSize="12sp"
+                        android:layout_marginStart="5dp"
+                        android:textColorHint="@color/white_40"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/manrope_semibold"
+                        android:backgroundTint="@color/white_40" />
+                </LinearLayout>
+                <LinearLayout
+                    android:paddingHorizontal="25dp"
+                    android:background="@drawable/background_round_corners"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/coin_icon"/>
+                    <TextView
+                        android:id="@+id/totalCoins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/manrope_semibold"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available Coins"
+                    android:textSize="12sp"
+                    android:textColor="@color/theme"
+                    android:fontFamily="@font/manrope_semibold"/>
+                <TextView
+                    android:letterSpacing="0.05"
+                    android:lineSpacingExtra="2dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="You will need to follow these rules when initiating a withdrawal within the application or platform you are using."
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_semibold"/>
+
+                <TextView
+                    android:letterSpacing="0.05"
+                    android:lineSpacingExtra="2dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1. Minimum Withdrawal Amount: "
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_semibold"/>
+
+                <TextView
+                    android:letterSpacing="0.05"
+                    android:lineSpacingExtra="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="The lowest number of coins you can withdraw is 1000."
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_regular"/>
+                <TextView
+                    android:letterSpacing="0.05"
+                    android:lineSpacingExtra="2dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2. Withdrawal Increments: "
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_semibold"/>
+                <TextView
+                    android:letterSpacing="0.05"
+                    android:lineSpacingExtra="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="The number of coins entered must be a multiple of 500 (e.g., 1000, 1500, 2000, 2500. etc.)."
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_regular"/>
+            </LinearLayout>
+
+        </ScrollView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.button.MaterialButton
+                android:layout_marginHorizontal="20dp"
+                android:backgroundTint="@color/theme"
+                style="@style/MyButtonStyle"
+                android:fontFamily="@font/manrope_medium"
+                android:textSize="18sp"
+                android:id="@+id/submitButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Proceed"
+                android:layout_marginTop="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingVertical="12dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

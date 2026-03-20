@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="black_20">#66000000</color>
+    <color name="black_10">#33000000</color>
+    <color name="black_40">#00000066</color>
+    <color name="black_303030">#303030</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_background">#70000000</color>
+    <color name="light_black">#000000B3</color>
+    <color name="screen_background_black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+    <color name="white_20">#33FFFFFF</color>
+    <color name="white_10">#1AFFFFFF</color>
+    <color name="textDescColor">#989898</color>
+    <color name="white_DADADA">#DADADA</color>
+    <color name="white_FEFEFF">#FEFEFF</color>
+    <color name="white_40">#66FFFFFF</color>
+    <color name="light_white">#FFFFFFFF</color>
+    <color name="theme">#B90A66</color>
+    <color name="transparent">#00000000</color>
+    <color name="seekbar_running">#88888880</color>
+    <color name="gray_303030">#303030</color>
+    <color name="gray_646464">#646464</color>
+    <color name="blue_329AF0">#329AF0</color>
+    <color name="red">#F20707</color>
+    <color name="yellow">#FFBA00</color>
+    <color name="gray_hint">#BFBBBB</color>
+    <color name="black_1c1c1c">#1C1C1C</color>
+    <color name="bottom_sheet_color">#212328</color>
+
+
+</resources>

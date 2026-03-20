@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000">
+
+        <!-- Remote User Video (Full Screen) -->
+        <FrameLayout
+            android:id="@+id/localUser"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:visibility="visible"/>
+
+        <!-- Local User Video (Small Floating Window) -->
+        <!-- Remote User Video (Small Floating Window) -->
+        <FrameLayout
+            android:id="@+id/remoteUser"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:elevation="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="150dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:gravity="center_horizontal"
+            android:layout_marginHorizontal="20dp"
+            android:id="@+id/personName"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/manrope_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="90dp"/>
+        <LinearLayout
+            android:id="@+id/layoutBottom"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content">
+            <!-- Mute Button -->
+            <ImageButton
+                android:id="@+id/mute"
+                android:layout_width="60dp"
+                android:layout_marginBottom="50dp"
+                android:layout_marginEnd="30dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:padding="15sp"
+                android:background="@drawable/background_round_corners"
+                android:src="@drawable/volume_unmute"
+                android:scaleType="fitStart"
+                app:tint="@android:color/white" />
+
+            <!-- End Call Button -->
+            <ImageButton
+                android:id="@+id/leaveBtn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/background_round_corners"
+                android:src="@drawable/call_icon_pink"
+                android:scaleType="centerInside"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="40dp"
+                app:tint="@color/red" />
+
+            <!-- Switch Camera Button -->
+            <ImageButton
+                android:visibility="gone"
+                android:id="@+id/switchCamera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/camera_icon_black"
+                android:scaleType="centerInside"
+                android:background="@drawable/background_round_corners"
+                android:layout_marginBottom="50dp"
+                android:layout_marginStart="30dp"
+                app:tint="@android:color/white" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/idJoinId"
+                android:layout_marginTop="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="join"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/camera_icon_black"
+                android:scaleType="centerInside"
+                android:tint="@android:color/white"
+                android:layout_marginBottom="50dp"
+                android:layout_marginStart="30dp"/>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

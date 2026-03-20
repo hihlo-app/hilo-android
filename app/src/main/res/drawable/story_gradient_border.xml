@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Gradient border -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#3D6BFF"
+                android:endColor="@color/theme"
+                android:angle="135" />
+        </shape>
+    </item>
+    <!-- Inner circle (white/transparent) -->
+    <item android:top="3dp" android:bottom="3dp" android:left="3dp" android:right="3dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/screen_background_black" />
+        </shape>
+    </item>
+</layer-list>

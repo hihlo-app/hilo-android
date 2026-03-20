@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="15dp"
+    android:background="@drawable/background_10dp_corner_round"
+    android:orientation="vertical"
+    android:backgroundTint="#4D4A4A"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Coins For Audio Call"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:letterSpacing="0"
+        android:fontFamily="@font/manrope_semibold"
+        android:gravity="center"
+        android:paddingBottom="10dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Audio Call"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:letterSpacing="0"
+            android:fontFamily="@font/manrope_semibold"
+            android:paddingBottom="10dp" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_weight="1"
+            android:id="@+id/switchAudioCall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:checked="true"
+            android:background="@null"
+            app:track="@drawable/custom_track_theme_colored"
+            android:thumb="@drawable/colored_thumb"/>
+    </LinearLayout>
+    <com.github.tomeees.scrollpicker.ScrollPicker
+        android:id="@+id/audioCoinsPicker"
+        android:layout_width="130dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"/>
+    <EditText
+        android:visibility="gone"
+        android:id="@+id/tvMessage"
+        android:inputType="number"
+        android:maxLength="3"
+        android:background="@drawable/background_10dp_corner_round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#757575"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColorHint="@color/white_40"
+        android:hint="Enter Coins"
+        android:textSize="18sp" />
+    <TextView
+        android:id="@+id/tvVideoCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Coins For Video Call"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:letterSpacing="0"
+        android:fontFamily="@font/manrope_semibold"
+        android:gravity="center"
+        android:paddingBottom="10dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Video Call"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:letterSpacing="0"
+            android:fontFamily="@font/manrope_semibold"
+            android:paddingBottom="10dp" />
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/switchVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:checked="true"
+        android:background="@null"
+        app:track="@drawable/custom_track_theme_colored"
+        android:thumb="@drawable/colored_thumb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tvVideoCall"
+        app:layout_constraintTop_toTopOf="@id/tvVideoCall"/>
+    </LinearLayout>
+
+    <com.github.tomeees.scrollpicker.ScrollPicker
+        android:id="@+id/videoCoinsPicker"
+        android:layout_width="130dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"/>
+    <EditText
+        android:visibility="gone"
+        android:id="@+id/etVideoCoin"
+        android:inputType="number"
+        android:maxLength="3"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/background_10dp_corner_round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#757575"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:fontFamily="@font/manrope_semibold"
+        android:textColorHint="@color/white_40"
+        android:hint="Enter Coins"
+        android:textSize="18sp" />
+    <Button
+        android:id="@+id/btnYes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/_19sdp"
+        android:text="Update"
+        android:fontFamily="@font/manrope_medium"
+        android:textSize="16sp"
+        android:letterSpacing="0"
+        android:background="@drawable/background_10dp_corner_round"
+        android:backgroundTint="@color/theme"
+        android:textColor="@color/white" />
+
+</LinearLayout>

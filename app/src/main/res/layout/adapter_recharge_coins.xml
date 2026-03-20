@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="150dp"
+        android:layout_height="240dp"
+        android:backgroundTint="@color/transparent"
+        app:cardCornerRadius="25dp"
+        app:strokeWidth="4dp"
+        app:strokeColor="@color/white"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_margin="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginHorizontal="13dp"
+                android:id="@+id/popularTag"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_bottom_corners_round"
+                android:backgroundTint="@color/theme"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/manrope_medium"
+                android:textSize="14sp"
+                android:text="MostPopular" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/coinNumberLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/popularTag"
+                app:layout_constraintBottom_toTopOf="@+id/additionalAmountTag"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="47dp"
+                    android:layout_height="47dp"
+                    android:src="@drawable/coin_icon"
+                    app:layout_constraintTop_toTopOf="@id/coinNumber"
+                    app:layout_constraintBottom_toBottomOf="@id/coinNumber"
+                    app:layout_constraintEnd_toStartOf="@id/coinNumber" />
+
+                <TextView
+                    android:id="@+id/coinNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textSize="30sp"
+                    android:text="100" />
+            </LinearLayout>
+
+            <TextView
+                android:gravity="center_horizontal"
+                android:id="@+id/additionalAmountTag"
+                android:paddingVertical="15dp"
+                android:paddingHorizontal="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/theme"
+                android:fontFamily="@font/manrope_semibold"
+                android:textSize="15sp"
+                android:text=" ₹50 Extra 18%"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

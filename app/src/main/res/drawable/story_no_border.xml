@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gray border -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/seekbar_running" /> <!-- light gray border -->
+        </shape>
+    </item>
+
+    <!-- Inner circle -->
+    <item android:top="0dp" android:bottom="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/screen_background_black" /> <!-- replace with your desired inner color -->
+        </shape>
+    </item>
+
+</layer-list>
