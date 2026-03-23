@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 import org.openjdk.tools.javac.util.Position
 import kotlin.getValue
 import androidx.core.graphics.toColorInt
+import androidx.core.view.isVisible
 
 class CommentReelBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetLayoutBinding? = null
@@ -74,6 +75,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
     private val limit = 10
     private var isLoading = false
     private var hasMore = true
+    private var lastScrollY = 1
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
     private val viewModel3: ReelsViewModel by viewModels()
@@ -129,9 +131,9 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                                 binding.commentsRecycler.layoutParams = params
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
-                                val params = binding.commentsRecycler.layoutParams
-                                params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                                binding.commentsRecycler.layoutParams = params
+//                                val params = binding.commentsRecycler.layoutParams
+//                                params.height = ViewGroup.LayoutParams.MATCH_PARENT
+//                                binding.commentsRecycler.layoutParams = params
                             }
                         }
                     }
@@ -142,25 +144,37 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                 })
 
                 binding.closeLine.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
+//                    if (event.action == MotionEvent.ACTION_DOWN) {
+//                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+//                    }
+                    val params = binding.commentsRecycler.layoutParams
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.commentsRecycler.layoutParams = params
                     true
                 }
 
                 binding.titleTextView.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
+//                    if (event.action == MotionEvent.ACTION_DOWN) {
+//                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+//                    }
+                    val params = binding.commentsRecycler.layoutParams
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.commentsRecycler.layoutParams = params
                     true
                 }
 
                 binding.closeLine.setOnClickListener {
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    val params = binding.commentsRecycler.layoutParams
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.commentsRecycler.layoutParams = params
                 }
 
                 binding.titleTextView.setOnClickListener {
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    val params = binding.commentsRecycler.layoutParams
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.commentsRecycler.layoutParams = params
                 }
             }
         }
@@ -173,7 +187,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
         }
         return dialog
     }
-
+    private val scrollThreshold = 40
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val payload = arguments?.getParcelable<Payload>("comments")
@@ -266,16 +280,33 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     Log.d("SCROLL", "User started dragging - expanding")
-                    behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // Expand when scrolling in any direction
-                if (behavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
-                    behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                val delta = dy - lastScrollY
+                when {
+                    // Scrolling DOWN
+                    delta > scrollThreshold -> {
+                    }
+                    delta < -scrollThreshold -> {
+                        val params = binding.commentsRecycler.layoutParams
+                        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                        binding.commentsRecycler.layoutParams = params
+                    }
                 }
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+                if (lastVisiblePosition >= totalItemCount - 1) {
+                    val params = binding.commentsRecycler.layoutParams
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.commentsRecycler.layoutParams = params
+                }
+                lastScrollY = dy
             }
         })
 

@@ -75,12 +75,13 @@ class AdapterHomeCreators(private val posts: MutableList<Post>, val getSelectedP
         return (this * context.resources.displayMetrics.density).toInt()
     }
 
-    fun updateList(posts:MutableList<Post>){
-        Log.i("TAG", "updateList: "+posts)
-        var start = if (this.posts.isNotEmpty())
-            this.posts.size else 0
+    fun updateList(posts: MutableList<Post>) {
+        Log.i("TAG", "updateList: $posts")
+
+        val start = this.posts.size
         this.posts.addAll(posts)
-        notifyItemRangeInserted(start, this.posts.size)
+
+        notifyItemRangeInserted(start, posts.size)
     }
     fun clearList(){
         var size = posts.size

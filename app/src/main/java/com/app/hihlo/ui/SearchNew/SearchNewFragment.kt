@@ -350,7 +350,8 @@ class SearchNewFragment : BaseFragment<FragmentSearchNewBinding>() {
         Handler(Looper.getMainLooper()).postDelayed({
             creatorsList.clear()
             currentPage = 1
-            selectedGender = null
+            selectedGender = 0
+            binding.allButton.text = "All"
             hitServiceListApi(currentPage, selectedGender)
             binding.swipeRefresh.isRefreshing = false
             isSearchStarted = false
@@ -456,13 +457,14 @@ class SearchNewFragment : BaseFragment<FragmentSearchNewBinding>() {
                 }
                 menuItemView.setOnClickListener {
                     popupWindow.dismiss()
-                    if(index==0){
+                    creatorsList.clear()
+                    currentPage = 1
+                    if (index == 0) {
                         binding.allButton.text = gender.gender_name
-                        selectedGender = null
-                        currentPage == 1
-                        Toast.makeText(requireContext(), "Selected: ${gender.gender_name} || ${selectedGender}", Toast.LENGTH_SHORT).show()
+                        selectedGender = 0
+                        //Toast.makeText(requireContext(), "Selected: ${gender.gender_name} || ${selectedGender}", Toast.LENGTH_SHORT).show()
                         hitServiceListApi(currentPage, selectedGender)
-                    }else{
+                    } else {
                         onGenderSelected(gender)
                     }
                 }
@@ -476,9 +478,12 @@ class SearchNewFragment : BaseFragment<FragmentSearchNewBinding>() {
     private fun onGenderSelected(gender: Gender) {
         binding.allButton.text = gender.gender_name
         selectedGender = gender.id
-        currentPage == 1
+
+        // 🔥 FIXED: Reset list and page
+        creatorsList.clear()
+        currentPage = 1
+
         hitServiceListApi(currentPage, selectedGender)
-        //Toast.makeText(requireContext(), "Selected: ${gender.gender_name}", Toast.LENGTH_SHORT).show()
     }
 
     private var isBottomBarVisible = true
@@ -653,7 +658,7 @@ class SearchNewFragment : BaseFragment<FragmentSearchNewBinding>() {
     }
     private fun hitServiceListApi(page: Int, genderId:Int?=null) {
         Log.e("TAG", "Home success: ${Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken}")
-        viewModel.hitHomeDataApi("Bearer "+ Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken, page.toString(), "10", selectedGender.toString())
+        viewModel.hitHomeDataApi("Bearer "+ Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.authToken, page.toString(), "10", genderId.toString())
     }
     private fun setObserver() {
         viewModel.getHomeLiveData().observe(viewLifecycleOwner) {
@@ -679,6 +684,9 @@ class SearchNewFragment : BaseFragment<FragmentSearchNewBinding>() {
                             }
                             if (it.data.payload.posts.isNotEmpty()){
                                 isLoading=true
+                                if (currentPage == 1) {
+                                    creatorsList.clear()
+                                }
                                 creatorsList.addAll(it.data.payload.posts)
                                 if (currentPage == 1) {
                                     if (creatorsList.size > 0){
