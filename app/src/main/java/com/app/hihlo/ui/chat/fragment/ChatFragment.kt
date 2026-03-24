@@ -177,6 +177,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), MessageAdapter.AudioPl
     private var selectedMediaType: String = "I"
 
     var totalAvailableCoins: Int?=null
+    private var rootView: View? = null
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun initView(savedInstanceState: Bundle?) {
@@ -285,31 +286,36 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), MessageAdapter.AudioPl
                 sendMessage((Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.userId ?: "").toString(), otherUserId.toString(), otherUserDetails?.name ?: "" , otherUserDetails?.profileImage ?: "", MediaType.TEXT.name, result, "0", "0")
             }
         }
-        setupKeyboardInsets()
+        //setupKeyboardInsets()
         (activity as? HomeActivity)?.setOnlineStatusVisibility(true)
         (activity as? HomeActivity)?.hideNavigationView()
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        // Capture the views we need
+        val root = binding.root
+        val bottomLayout = binding.bottomLayout
+        rootView = root  // store for removal in onDestroyView
+        val defaultMarginPx = (10 * resources.displayMetrics.density).toInt()
+
         keyboardLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            rootView = binding.root
             val rect = Rect()
-            binding.root.getWindowVisibleDisplayFrame(rect)
-
-            val screenHeight = binding.root.height
+            root.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = root.height
             val keypadHeight = screenHeight - rect.bottom
-
             val keyboardOpen = keypadHeight > screenHeight * 0.15
 
-            val params = binding.bottomLayout.layoutParams as ConstraintLayout.LayoutParams
-
+            val params = bottomLayout.layoutParams as ConstraintLayout.LayoutParams
             if (keyboardOpen) {
                 params.bottomMargin = keypadHeight
             } else {
-                params.bottomMargin = (10 * resources.displayMetrics.density).toInt()
+                params.bottomMargin = defaultMarginPx
             }
-
-            binding.bottomLayout.layoutParams = params
+            bottomLayout.layoutParams = params
         }
 
-        rootView?.viewTreeObserver?.addOnGlobalLayoutListener(keyboardLayoutListener)
+        root.viewTreeObserver.addOnGlobalLayoutListener(keyboardLayoutListener)
+
+        //rootView?.viewTreeObserver?.addOnGlobalLayoutListener(keyboardLayoutListener)
         requireActivity().window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
@@ -478,16 +484,13 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(), MessageAdapter.AudioPl
         )
         popup.show()
     }
-    private var rootView: View? = null
     override fun onDestroyView() {
         keyboardLayoutListener?.let { listener ->
             rootView?.viewTreeObserver?.removeOnGlobalLayoutListener(listener)
         }
-
         keyboardLayoutListener = null
         rootView = null
         super.onDestroyView()
-        // Clean up Firestore listener when leaving chat
         viewModel.stopMessagesListener()
     }
     private fun setObserver() {
