@@ -105,7 +105,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                 val displayMetrics = resources.displayMetrics
                 val screenHeight = displayMetrics.heightPixels
                 val peekHeight = (screenHeight * 0.5).toInt()
-                behavior.peekHeight = requireContext().dpToPx(600)
+                behavior.peekHeight = requireContext().dpToPx(525)
 
                 // 2. Allow it to expand
                 behavior.isFitToContents = true
@@ -129,7 +129,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                         when (newState) {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 val params = binding.commentsRecycler.layoutParams
-                                params.height = requireContext().dpToPx(500)
+                                params.height = requireContext().dpToPx(480)
                                 binding.commentsRecycler.layoutParams = params
                                 isExpanding = true
                             }
@@ -197,7 +197,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
         val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
         bottomSheet?.let {
             behavior = BottomSheetBehavior.from(it)
-            behavior?.peekHeight = requireContext().dpToPx(600)
+            behavior?.peekHeight = requireContext().dpToPx(525)
             behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
         return dialog

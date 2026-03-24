@@ -553,10 +553,10 @@
                         android:background="@drawable/background_10dp_corner_round"
                         android:backgroundTint="@color/black_303030"
                         android:hint="It’s like what i have.."
-                        android:inputType="text"
                         android:maxLength="150"
-                        android:maxLines="1"
+                        android:maxLines="4"
                         android:padding="15dp"
+                        android:imeOptions="actionDone"
                         android:textColor="@color/white"
                         android:textColorHint="#BFBBBB"
                         android:textSize="16sp" />

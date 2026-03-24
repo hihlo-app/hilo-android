@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -959,6 +960,7 @@ class EditProfileNewFragment : Fragment() {
     fun Int.dpToPx(context: Context): Int {
         return (this * context.resources.displayMetrics.density).toInt()
     }
+    private var globalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -980,7 +982,9 @@ class EditProfileNewFragment : Fragment() {
             false
         }
         setBottomMargin()
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+        globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            // Check if fragment is still attached
+            if (!isAdded) return@OnGlobalLayoutListener
 
             val rect = Rect()
             binding.root.getWindowVisibleDisplayFrame(rect)
@@ -995,12 +999,15 @@ class EditProfileNewFragment : Fragment() {
             if (keyboardOpen) {
                 params.bottomMargin = keypadHeight
             } else {
-                params.bottomMargin = (10 * resources.displayMetrics.density).toInt()
+                // Safe resource access
+                val density = resources.displayMetrics.density
+                params.bottomMargin = (10 * density).toInt()
             }
 
             binding.bottomLayout.layoutParams = params
             requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
 //        requireActivity().window.setSoftInputMode(
 //            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 //        )
@@ -1038,6 +1045,13 @@ class EditProfileNewFragment : Fragment() {
         }
     }
 
-
+    override fun onDestroyView() {
+        // Remove the listener to avoid leaks and crashes
+        globalLayoutListener?.let {
+            binding.root.viewTreeObserver.removeOnGlobalLayoutListener(it)
+        }
+        globalLayoutListener = null
+        super.onDestroyView()
+    }
 
 }

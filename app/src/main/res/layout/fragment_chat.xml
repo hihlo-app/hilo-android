@@ -602,7 +602,7 @@
             </ImageView>
 
             <EditText
-                android:maxLines="3"
+                android:maxLines="4"
                 android:id="@+id/chatEdittext"
                 android:text="@={viewModel.message}"
                 android:layout_marginStart="6dp"
