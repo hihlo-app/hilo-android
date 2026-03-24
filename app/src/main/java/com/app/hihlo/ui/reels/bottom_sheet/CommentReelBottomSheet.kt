@@ -129,7 +129,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                         when (newState) {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 val params = binding.commentsRecycler.layoutParams
-                                params.height = requireContext().dpToPx(397)
+                                params.height = requireContext().dpToPx(360)
                                 binding.commentsRecycler.layoutParams = params
                                 isExpanding = true
                             }
