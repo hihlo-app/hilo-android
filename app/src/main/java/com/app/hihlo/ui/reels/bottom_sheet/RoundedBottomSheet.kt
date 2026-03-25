@@ -157,7 +157,8 @@ class RoundedBottomSheet : BottomSheetDialogFragment() {
                 this.commentId = commentId.toString()
                 binding.commentReplyEdittext.setHint("Reply to comment...")
                 CommonUtils.openKeyboard(binding.commentReplyEdittext)
-            }
+            },
+            binding.commentsRecycler
         )
         Glide.with(requireContext()).load(Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.profileImage).placeholder(R.drawable.profile_placeholder).error(R.drawable.profile_placeholder).into(binding.userImage)
         binding.commentsRecycler.adapter = adapter

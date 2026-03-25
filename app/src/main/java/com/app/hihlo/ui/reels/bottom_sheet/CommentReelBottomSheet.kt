@@ -15,6 +15,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -83,6 +84,7 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
     private var behavior: BottomSheetBehavior<FrameLayout>? = null
     private var isExpanding = false
     private var heightChangeRunnable: Runnable? = null
+    private var recyclerViewState: Parcelable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -287,7 +289,8 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                 this.commentId = commentId.toString()
                 binding.commentReplyEdittext.setHint("Reply to comment...")
                 CommonUtils.openKeyboard(binding.commentReplyEdittext)
-            }
+            },
+            binding.commentsRecycler
         )
         hasMore = initialComments.size >= limit
         Glide.with(requireContext()).load(Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.profileImage).placeholder(R.drawable.profile_placeholder).error(R.drawable.profile_placeholder).into(binding.userImage)
@@ -297,12 +300,9 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
             binding.commentsRecycler.paddingLeft,
             binding.commentsRecycler.paddingTop,
             binding.commentsRecycler.paddingRight,
-            requireContext().dpToPx(70) // compose box height approx
+            requireContext().dpToPx(70)
         )
-
         binding.commentsRecycler.clipToPadding = false
-
-        // ADD THIS SCROLL LISTENER HERE - AFTER RECYCLERVIEW IS SET UP
         binding.commentsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy < 0 && isRecyclerViewAtTop(recyclerView) && isExpanding && behavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -322,8 +322,9 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
             } else {
                 if (isReplySelected) {
                     isReplySelected = false
-                    var request = ReplyToCommentRequest(reply = binding.commentReplyEdittext.text.toString(), commentId)
-                    onReplyAction?.invoke(request)  // Pass any data here
+                    var full_comment = RTVariable.REPLY_COMBINED_IMAGE_USERNAME+binding.commentReplyEdittext.text.toString()
+                    var request = ReplyToCommentRequest(reply = full_comment, commentId)
+                    onReplyAction?.invoke(request)
                 } else {
                     hitPostCommentApi()
                 }

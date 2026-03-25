@@ -17,8 +17,9 @@ object RTVariable {
     var REPLY_POSITION = -1
     var REELS_POSITION: Int = 0
     var REELS_ID: String = ""
-
     var STORY_POSITION: Int = 0
+    var REPLY_COMBINED_IMAGE_USERNAME: String = ""
+    var REPLY_COMBINED_IMAGE_DELEMETER: String = "####@@@@####"
 
     fun formatCount(count: Int): String {
         return when {

@@ -240,12 +240,14 @@ class PostsAdapter(
                 var user = Preferences.getCustomModelPreference<LoginResponse>(root.context, LOGIN_DATA)?.payload?.username
                 if (post.creatorDetail?.username==user){
                     followButtonLayout.isVisible = false
-                }else if (post?.is_follow!=1){
-                    followButtonLayout.isVisible = true
-                    followButtonImage.setImageResource(R.drawable.follow_button_reel)
-                }else{
-                    followButtonImage.setImageResource(R.drawable.following_button_reel)
-                    followButtonLayout.isVisible = true
+                }else {
+                    if (post?.is_follow!=1){
+                        followButtonLayout.isVisible = true
+                        followButtonImage.setImageResource(R.drawable.follow_button_reel)
+                    }else{
+                        followButtonImage.setImageResource(R.drawable.following_button_reel)
+                        followButtonLayout.isVisible = true
+                    }
                 }
                 if (post.creatorDetail?.username==user){
                     giftImage.isVisible = false

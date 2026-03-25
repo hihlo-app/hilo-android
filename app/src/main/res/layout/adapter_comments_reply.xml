@@ -17,8 +17,8 @@
             android:id="@+id/userImageCardView"
             app:cardElevation="0dp"
             app:cardCornerRadius="30dp"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             app:strokeColor="@color/theme"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -106,12 +106,12 @@
             app:layout_constraintStart_toEndOf="@id/userImageCardView">
 
             <TextView
-                android:id="@+id/delete"
+                android:id="@+id/reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete"
+                android:text="Reply"
                 android:textSize="12sp"
-                android:textColor="@color/white_40"
+                android:textColor="@color/theme"
                 android:fontFamily="@font/manrope_regular"
                 android:layout_marginStart="10dp"
                 tools:ignore="MissingConstraints"
