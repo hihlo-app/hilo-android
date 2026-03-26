@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.app.hihlo.R
 import com.app.hihlo.databinding.AdapterCommentsBinding
@@ -20,6 +21,7 @@ import com.app.hihlo.model.get_reel_comments.response.Comment
 import com.app.hihlo.model.login.response.LoginResponse
 import com.app.hihlo.preferences.LOGIN_DATA
 import com.app.hihlo.preferences.Preferences
+import com.app.hihlo.ui.HomeNew.HomeNewFragmentDirections
 import com.app.hihlo.ui.home.activity.HomeActivity
 import com.app.hihlo.ui.reels.bottom_sheet.CommentReelBottomSheet
 import com.app.hihlo.utils.CommonUtils
@@ -33,6 +35,7 @@ class AdapterComments(
     val onReplyClick: (replyText: String, parentCommentId: Int) -> Unit,
     val onDeleteClick: (isReply: Boolean, parentCommentId: Int?, itemId: Int) -> Unit,
     val onReplySelected: (commentId: Int) -> Unit,
+    val onProfileSelected: (commentId: Int) -> Unit,
     val commentsRecycler: RecyclerView
 ) : RecyclerView.Adapter<AdapterComments.ViewHolder>() {
 
@@ -86,6 +89,9 @@ class AdapterComments(
                         replyPosition = RTVariable.REPLY_POSITION
                     )
                     onDeleteClick(true, comments?.get(position)?.id, replyId)
+                },
+                onReplyProfileSelected = { user_id ->
+                    onProfileSelected(user_id)
                 }
             )
             commentReplyRecycler.adapter = adapter
@@ -143,6 +149,12 @@ class AdapterComments(
                     visibleReplyCounts[currentId] = if (newVisible > total) total else newVisible
                     notifyItemChanged(position)
                 }
+            }
+            userImage.setOnClickListener {
+                onProfileSelected(commentItem.user.id)
+            }
+            name.setOnClickListener {
+                onProfileSelected(commentItem.user.id)
             }
         }
     }

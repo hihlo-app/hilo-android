@@ -15,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.app.hihlo.R
 import com.app.hihlo.databinding.BottomSheetLayoutBinding
 import com.app.hihlo.model.get_reel_comments.response.Comment
@@ -24,6 +25,7 @@ import com.app.hihlo.model.post_comments.request.PostCommentsRequest
 import com.app.hihlo.model.reply_to_comment.request.ReplyToCommentRequest
 import com.app.hihlo.preferences.LOGIN_DATA
 import com.app.hihlo.preferences.Preferences
+import com.app.hihlo.ui.HomeNew.HomeNewFragmentDirections
 import com.app.hihlo.ui.reels.adapter.AdapterComments
 import com.app.hihlo.utils.CommonUtils
 import com.app.hihlo.utils.CommonUtils.toPx
@@ -157,6 +159,9 @@ class RoundedBottomSheet : BottomSheetDialogFragment() {
                 this.commentId = commentId.toString()
                 binding.commentReplyEdittext.setHint("Reply to comment...")
                 CommonUtils.openKeyboard(binding.commentReplyEdittext)
+            },
+            onProfileSelected = { user_id ->
+                findNavController().navigate(HomeNewFragmentDirections.actionHomeNewFragmentToProfileFragment("0", user_id.toString()))
             },
             binding.commentsRecycler
         )

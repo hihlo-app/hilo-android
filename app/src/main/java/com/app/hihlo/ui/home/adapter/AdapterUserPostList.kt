@@ -405,6 +405,7 @@ class AdapterUserPostList(
     fun addStory(my_story: List<MyStory>, stories_List: List<Story>) {
         my_storiesList.addAll(my_story)
         storiesList.addAll(stories_List)
+        notifyDataSetChanged()
     }
 
     private fun setDescriptionText(

@@ -61,6 +61,8 @@ import org.openjdk.tools.javac.util.Position
 import kotlin.getValue
 import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
+import com.app.hihlo.ui.HomeNew.HomeNewFragmentDirections
 
 class CommentReelBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetLayoutBinding? = null
@@ -289,6 +291,10 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                 this.commentId = commentId.toString()
                 binding.commentReplyEdittext.setHint("Reply to comment...")
                 CommonUtils.openKeyboard(binding.commentReplyEdittext)
+            },
+            onProfileSelected = { user_id ->
+                dismiss()
+                findNavController().navigate(HomeNewFragmentDirections.actionHomeNewFragmentToProfileFragment("0", user_id.toString()))
             },
             binding.commentsRecycler
         )

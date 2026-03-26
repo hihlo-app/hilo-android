@@ -30,7 +30,8 @@ class AdapterCommentsReply(
     var comment_id: String,
     var replies: MutableList<Replies>,
     val onReplySelect: (String) -> Unit,               // optional — if you still want inline reply
-    val onDeleteClick: (replyId: Int) -> Unit          // ← new
+    val onDeleteClick: (replyId: Int) -> Unit,
+    val onReplyProfileSelected: (user_id: Int) -> Unit,// ← new
 ) : RecyclerView.Adapter<AdapterCommentsReply.ViewHolder>() {
     inner class ViewHolder(val binding: AdapterCommentsReplyBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -44,11 +45,14 @@ class AdapterCommentsReply(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
-            Glide.with(root.context).load(replies[position].user.profile_image).placeholder(
-                R.drawable.profile_placeholder).error(R.drawable.profile_placeholder).into(userImage)
+            Glide.with(root.context)
+                .load(replies[position].user.profile_image)
+                .placeholder(R.drawable.profile_placeholder)
+                .error(R.drawable.profile_placeholder).into(userImage)
             name.text = replies[position].user.name
 //            userId.text = replies[position].user.username
             userId.isVisible=false
+            var user_id = replies?.get(position)?.user?.id
 //            userLocation.text = replies[position]?.user?.city+", "+replies[position]?.user?.country
             //comment.text = replies[position].reply
             //var data = "https://d38vqutibeq2uv.cloudfront.net/1757159096618####@@@@####@hihlo####@@@@####hloo you"
@@ -87,6 +91,12 @@ class AdapterCommentsReply(
             holder.binding.reply.setOnClickListener {
                 RTVariable.REPLY_COMBINED_IMAGE_USERNAME = replies?.get(position)?.user?.profile_image + RTVariable.REPLY_COMBINED_IMAGE_DELEMETER + replies?.get(position)?.user?.username + RTVariable.REPLY_COMBINED_IMAGE_DELEMETER
                 onReplySelect(comment_id)
+            }
+            holder.binding.userImage.setOnClickListener {
+                user_id?.let { p1 -> onReplyProfileSelected(p1) }
+            }
+            holder.binding.name.setOnClickListener {
+                user_id?.let { p1 -> onReplyProfileSelected(p1) }
             }
 //            holder.binding.delete.setOnClickListener {
 //                RTVariable.COMMENT_POSITION = position
