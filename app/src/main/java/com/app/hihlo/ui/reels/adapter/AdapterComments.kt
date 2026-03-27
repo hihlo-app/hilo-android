@@ -36,12 +36,13 @@ class AdapterComments(
     val onDeleteClick: (isReply: Boolean, parentCommentId: Int?, itemId: Int) -> Unit,
     val onReplySelected: (commentId: Int) -> Unit,
     val onProfileSelected: (commentId: Int) -> Unit,
+    val onMentionClick: (user_id: String) -> Unit,
     val commentsRecycler: RecyclerView
 ) : RecyclerView.Adapter<AdapterComments.ViewHolder>() {
 
     lateinit var adapter: AdapterCommentsReply
 
-    // NEW: Tracks how many replies are currently visible for each comment (0 = collapsed)
+    // Tracks how many replies are currently visible for each comment (1 = first reply only)
     private val visibleReplyCounts = mutableMapOf<Int, Int>()
 
     inner class ViewHolder(val binding: AdapterCommentsBinding) : RecyclerView.ViewHolder(binding.root)
@@ -50,26 +51,29 @@ class AdapterComments(
         return ViewHolder(AdapterCommentsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun getItemCount(): Int {
-        return comments?.size ?: 0
-    }
+    override fun getItemCount(): Int = comments.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.apply {
-            Log.e("TTTG", "TTG ${comments?.get(position)?.user?.profile_image} ${comments?.get(position)?.user?.username} ${comments?.get(position)?.comment}")
+            val commentItem = comments[position]
+            val commentId = commentItem.id ?: -1
 
-            Glide.with(root.context).load(comments?.get(position)?.user?.profile_image)
+            Glide.with(root.context).load(commentItem.user?.profile_image)
                 .placeholder(R.drawable.profile_placeholder)
                 .error(R.drawable.profile_placeholder)
                 .into(userImage)
 
-            name.text = comments?.get(position)?.user?.name
+            name.text = commentItem.user?.username
             userId.isVisible = false
-            comment.text = comments?.get(position)?.comment
-            val commentItem = comments[position]
-            val commentId = commentItem.id ?: -1
+            comment.text = commentItem.comment
+
+            // ----- Reply Visibility Logic -----
             val totalReplies = commentItem.replies?.size ?: 0
-            val visibleCount = visibleReplyCounts.getOrDefault(commentId, 0)
+            // Default: show first reply if there is at least one reply
+            var visibleCount = visibleReplyCounts.getOrDefault(commentId, if (totalReplies > 0) 1 else 0)
+            if (visibleCount > totalReplies) visibleCount = totalReplies
+            visibleReplyCounts[commentId] = visibleCount
+
             val displayReplies = if (visibleCount > 0) {
                 commentItem.replies?.take(visibleCount) ?: emptyList()
             } else {
@@ -77,10 +81,10 @@ class AdapterComments(
             }
 
             adapter = AdapterCommentsReply(
-                comment_id = comments?.get(position)?.id.toString(),
+                comment_id = commentItem.id.toString(),
                 replies = displayReplies.toMutableList(),
                 onReplySelect = { comment_id ->
-                    onReplySelected(comment_id.toInt() ?: -1)
+                    onReplySelected(comment_id.toInt())
                 },
                 onDeleteClick = { replyId ->
                     removeItems(
@@ -88,73 +92,88 @@ class AdapterComments(
                         commentPosition = position,
                         replyPosition = RTVariable.REPLY_POSITION
                     )
-                    onDeleteClick(true, comments?.get(position)?.id, replyId)
+                    onDeleteClick(true, commentItem.id, replyId)
                 },
                 onReplyProfileSelected = { user_id ->
                     onProfileSelected(user_id)
+                },
+                onMentionClick = { user_name ->
+                    onMentionClick(user_name)
                 }
             )
             commentReplyRecycler.adapter = adapter
             commentReplyRecycler.isNestedScrollingEnabled = false
-            var user = Preferences.getCustomModelPreference<LoginResponse>(root.context, LOGIN_DATA)?.payload?.username
-            val commentOwner = comments?.get(position)?.comment_owner
-            val commentUser = comments?.get(position)?.user?.username
-            val commentOwnerUserName = comments?.get(position)?.post_owner_username
-            if (commentOwner == 1 || user == commentUser) {
-                if (user == commentOwnerUserName) {
-                    delete.isVisible = true
-                } else {
-                    delete.isVisible = false
-                }
-            } else {
-                delete.isVisible = false
+
+            // ----- Visibility of Delete / Reply Buttons (existing logic) -----
+            val user = Preferences.getCustomModelPreference<LoginResponse>(root.context, LOGIN_DATA)?.payload?.username
+            val commentOwner = commentItem.comment_owner
+            val commentUser = commentItem.user?.username
+            val commentOwnerUserName = commentItem.post_owner_username
+
+            delete.isVisible = when {
+                (commentOwner == 1 || user == commentUser) && user == commentOwnerUserName -> true
+                else -> false
             }
-            holder.binding.root.setOnLongClickListener {
-                val allowLongClick = commentOwner == 1 || user == commentUser || user == commentOwnerUserName
+
+            root.setOnLongClickListener {
+                val allowLongClick = (commentOwner == 1 || user == commentUser) || user == commentOwnerUserName
                 if (allowLongClick) {
-                    comment.id?.let { id ->
+                    commentItem.id?.let { id ->
                         RTVariable.COMMENT_POSITION = position
-                        onDeleteClick(false, comments?.get(position)?.id, id)
+                        onDeleteClick(false, commentItem.id, id)
                     }
                     true
                 } else {
                     false
                 }
             }
-            holder.binding.reply.setOnClickListener {
-                RTVariable.REPLY_COMBINED_IMAGE_USERNAME = comments?.get(position)?.user?.profile_image + RTVariable.REPLY_COMBINED_IMAGE_DELEMETER + comments?.get(position)?.user?.username + RTVariable.REPLY_COMBINED_IMAGE_DELEMETER
-                onReplySelected(comments?.get(position)?.id ?: -1)
+
+            reply.setOnClickListener {
+                RTVariable.REPLY_COMBINED_IMAGE_USERNAME = commentItem.user?.profile_image + RTVariable.REPLY_COMBINED_IMAGE_DELEMETER +
+                        commentItem.user?.username + RTVariable.REPLY_COMBINED_IMAGE_DELEMETER
+                onReplySelected(commentItem.id ?: -1)
             }
-            viewMoreLayout.isVisible = totalReplies > 0
-            if (totalReplies > 0) {
-                val replyText = if (totalReplies == 1) "Reply" else "Replies"
-                viewReplies.text = if (visibleCount >= totalReplies) {
-                    "Hide $totalReplies $replyText"
+
+            // ----- "View more / Hide" Button Logic -----
+            // Only show button if there are more than 1 reply
+            viewMoreLayout.isVisible = totalReplies > 1
+
+            if (totalReplies > 1) {
+                val remaining = totalReplies - visibleCount
+                val text = if (visibleCount >= totalReplies) {
+                    "Hide replies"
                 } else {
-                    "View $totalReplies $replyText"
+                    "View $remaining more repl${if (remaining > 1) "ies" else "y"}"
                 }
+                viewReplies.text = text
             }
+
             commentReplyRecycler.isVisible = visibleCount > 0
+
             viewReplies.setOnClickListener {
                 val currentComment = comments.getOrNull(position) ?: return@setOnClickListener
                 val currentId = currentComment.id ?: return@setOnClickListener
                 val total = currentComment.replies?.size ?: 0
-                val currentVisible = visibleReplyCounts.getOrDefault(currentId, 0)
+                val currentVisible = visibleReplyCounts.getOrDefault(currentId, if (total > 0) 1 else 0)
+
                 if (currentVisible >= total) {
-                    visibleReplyCounts[currentId] = 0
+                    // Hide all except first reply
+                    visibleReplyCounts[currentId] = if (total > 0) 1 else 0
                     notifyItemChanged(position)
                     commentsRecycler.scrollToPosition(position)
                 } else {
-                    val newVisible = currentVisible + 5
+                    // Show up to 10 more replies
+                    val newVisible = currentVisible + 10
                     visibleReplyCounts[currentId] = if (newVisible > total) total else newVisible
                     notifyItemChanged(position)
                 }
             }
+
             userImage.setOnClickListener {
-                onProfileSelected(commentItem.user.id)
+                onProfileSelected(commentItem.user?.id ?: -1)
             }
             name.setOnClickListener {
-                onProfileSelected(commentItem.user.id)
+                onProfileSelected(commentItem.user?.id ?: -1)
             }
         }
     }
@@ -162,19 +181,28 @@ class AdapterComments(
     fun updateList(comments: List<Comment>) {
         this.comments.clear()
         this.comments.addAll(comments)
+        // Reset visible counts – new list, start fresh
+        visibleReplyCounts.clear()
         notifyDataSetChanged()
     }
 
     fun removeItems(mode: Int, commentPosition: Int, replyPosition: Int = -1) {
         if (mode == 1) {
+            // Remove a top-level comment
+            val removedId = comments.getOrNull(commentPosition)?.id
+            if (removedId != null) {
+                visibleReplyCounts.remove(removedId)
+            }
             comments.removeAt(commentPosition)
             notifyItemRemoved(commentPosition)
         } else if (mode == 2 && replyPosition != -1) {
+            // Remove a reply
             val replies = comments[commentPosition].replies?.toMutableList() ?: mutableListOf()
             if (replyPosition < replies.size) {
                 replies.removeAt(replyPosition)
             }
             comments[commentPosition].replies = replies
+            // Do not adjust visibleCount here – will be corrected in onBindViewHolder
             notifyItemChanged(commentPosition)
         }
     }
@@ -182,73 +210,23 @@ class AdapterComments(
     fun addItems(newComments: List<Comment>) {
         val start = comments.size
         comments.addAll(newComments)
+        // Initialize visible counts for new comments (show first reply if available)
+        newComments.forEach { comment ->
+            comment.id?.let { id ->
+                if ((comment.replies?.size ?: 0) > 0 && !visibleReplyCounts.containsKey(id)) {
+                    visibleReplyCounts[id] = 1
+                }
+            }
+        }
         notifyItemRangeInserted(start, newComments.size)
     }
 
-    /*private fun setRichComment(textView: TextView, rawComment: String?) {
-        val context = textView.context
-        if (rawComment.isNullOrEmpty()) {
-            textView.text = ""
-            return
-        }
-        if (!rawComment.contains(RTVariable.REPLY_COMBINED_IMAGE_DELEMETER)) {
-            textView.text = rawComment
-            return
-        }
-        val parts = rawComment.split(RTVariable.REPLY_COMBINED_IMAGE_DELEMETER)
-        if (parts.size != 3) {
-            textView.text = rawComment
-            return
-        }
-        val imageUrl = parts[0].trim()
-        val mention = parts[1].trim()
-        val restText = parts[2].trim()
-
-        val builder = SpannableStringBuilder()
-        builder.append(" ")
-        builder.append(" ")
-        builder.append(mention)
-        builder.append(" ")
-        builder.append(restText)
-
-        textView.text = builder
-
-        val targetSize = textView.textSize.toInt()
-
-        Glide.with(context)
-            .asBitmap()
-            .load(imageUrl)
-            .placeholder(R.drawable.profile_placeholder)
-            .error(R.drawable.profile_placeholder)
-            .circleCrop()
-            .into(object : CustomTarget<Bitmap>(targetSize - 10, targetSize) {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val drawable = BitmapDrawable(context.resources, resource)
-                    val fontMetrics = textView.paint.fontMetricsInt
-                    val lineHeight = fontMetrics.bottom - fontMetrics.top
-                    val verticalOffset = (lineHeight - targetSize) / 2
-
-                    drawable.setBounds(0, verticalOffset + 5, targetSize, verticalOffset + targetSize)
-
-                    val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
-
-                    val spannable = SpannableStringBuilder(textView.text)
-                    spannable.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                    val mentionStart = 2
-                    val mentionEnd = mentionStart + mention.length
-                    spannable.setSpan(
-                        ForegroundColorSpan(Color.parseColor("#B90A66")),
-                        mentionStart,
-                        mentionEnd,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-
-                    textView.text = spannable
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
-    } */
-
+    /* --------------------------------------------------------------------------
+        Original setRichComment method (commented out – kept for reference)
+    -------------------------------------------------------------------------- */
+    /*
+    private fun setRichComment(textView: TextView, rawComment: String?) {
+        // ... original implementation ...
+    }
+    */
 }

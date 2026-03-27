@@ -53,7 +53,7 @@
                 android:id="@+id/onlineStatusImage"
                 android:src="@drawable/online_status_green"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="8.5dp"
                 android:layout_width="10dp"
                 android:layout_height="10dp"/>
 
@@ -84,8 +84,8 @@
                 <ImageView
                     android:id="@+id/verifiedNameTick"
                     android:layout_marginStart="-17dp"
-                    android:layout_width="13dp"
-                    android:layout_height="13dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:gravity="center_vertical"
                     android:src="@drawable/verified_tick"
                     app:layout_constraintTop_toTopOf="@id/name"
@@ -117,7 +117,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="10dp" />
             <ImageView
                 android:layout_marginStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"

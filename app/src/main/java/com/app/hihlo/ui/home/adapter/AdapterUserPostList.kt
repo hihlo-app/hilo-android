@@ -156,6 +156,10 @@ class AdapterUserPostList(
                     Log.e("POSTDATA", "POSTDATA>>> "+profilePosts.data[position])
                     verifiedNameTick.isVisible = false
                     onlineStatusImage.isVisible = false
+                    postImage.setImageDrawable(null)
+                    postImage.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    postImage.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    postImage.requestLayout()
                     Glide.with(root.context).load(profilePosts.data[position].asset_url).into(postImage)
                     Glide.with(root.context).load(profilePosts.data[position].creator_profile_image)
                         .placeholder(R.drawable.profile_placeholder)
@@ -360,7 +364,7 @@ class AdapterUserPostList(
                         RTVariable.POST_POSITION = position
                         RTVariable.POST_ID = profilePosts.data[position].id.toString()
                         RTVariable.COMMENT_FROM = false
-                        Toast.makeText(root.context, "P ${profilePosts.data[position].id}", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(root.context, "P ${profilePosts.data[position].id}", Toast.LENGTH_SHORT).show()
                         getSelectedPost(Post(), profilePosts.data[position], 3, position, sideOptions)
                     }
                     shareImage.setOnClickListener {

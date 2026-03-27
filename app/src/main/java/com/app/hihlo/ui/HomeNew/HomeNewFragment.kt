@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -127,7 +128,11 @@ class HomeNewFragment : BaseFragment<FragmentHomeNewBinding>() {
         setupRecyclerView()
         setObserver()
         onClick()
+        binding.swipeRefresh.setColorSchemeColors(Color.TRANSPARENT)
+        binding.swipeRefresh.setProgressBackgroundColorSchemeColor(Color.TRANSPARENT)
         binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            binding.progressBar.isVisible = true
             refreshData()
         }
         requireActivity().supportFragmentManager.setFragmentResultListener("home_click", viewLifecycleOwner) { _, _ ->
@@ -548,6 +553,7 @@ class HomeNewFragment : BaseFragment<FragmentHomeNewBinding>() {
         viewModel.getHomeLiveData().observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.SUCCESS -> {
+                    binding.progressBar.isVisible = false
                     Log.e("TAG", "Home success: ${Gson().toJson(it)}")
                     Log.e("TAG", "Home success: ${Gson().toJson(it)}")
                     if (it.data?.status==1){

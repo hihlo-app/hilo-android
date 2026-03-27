@@ -159,6 +159,7 @@ dependencies {
 
     //wheel picker
     implementation("com.github.tomeees:scrollpicker:1.7.5")
+    implementation("com.google.code.gson:gson:2.10.1")
 
 
 }

@@ -24,18 +24,18 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/userImageCardView"
-                android:layout_width="39dp"
-                android:layout_height="39dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/gredient_circle"
                 app:cardCornerRadius="80dp"
-                android:padding="6dp"
+                android:padding="4dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.card.MaterialCardView
 
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
+                    android:layout_width="31dp"
+                    android:layout_height="31dp"
                     android:layout_gravity="center"
                     app:cardCornerRadius="50dp"
                     android:id="@+id/inner_card"
@@ -50,8 +50,9 @@
                         android:id="@+id/userImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitXY"
                         android:src="@drawable/sample_profile" />
+
                 </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -60,6 +61,8 @@
                 android:id="@+id/onlineStatusImage"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="0.5dp"
                 android:src="@drawable/online_status_green"
                 app:layout_constraintBottom_toBottomOf="@+id/userImageCardView"
                 app:layout_constraintEnd_toEndOf="@id/userImageCardView" />
@@ -179,6 +182,7 @@
                 android:layout_marginStart="10dp"
                 android:gravity="start"
                 android:orientation="vertical"
+                android:layout_marginTop="2.45dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="@id/nameLayout"
                 app:layout_constraintTop_toTopOf="parent"
@@ -219,6 +223,7 @@
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
             android:src="@drawable/sample_computer_image"
             app:layout_constraintBottom_toBottomOf="@id/likeLayout"
             app:layout_constraintTop_toBottomOf="@id/userDetailsLayout" />

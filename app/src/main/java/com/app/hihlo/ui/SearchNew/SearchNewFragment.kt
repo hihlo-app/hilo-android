@@ -169,6 +169,7 @@ class SearchNewFragment : BaseFragment<FragmentSearchNewBinding>() {
                 }
             }
         }
+        binding.swipeRefresh.isEnabled = false
     }
 
     fun View.isKeyboardVisible(): Boolean {

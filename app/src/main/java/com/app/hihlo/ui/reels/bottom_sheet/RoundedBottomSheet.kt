@@ -163,6 +163,9 @@ class RoundedBottomSheet : BottomSheetDialogFragment() {
             onProfileSelected = { user_id ->
                 findNavController().navigate(HomeNewFragmentDirections.actionHomeNewFragmentToProfileFragment("0", user_id.toString()))
             },
+            onMentionClick = { user_name ->
+                //Log.e("onMentionClick", "onMentionClick>>> "+user_name)
+            },
             binding.commentsRecycler
         )
         Glide.with(requireContext()).load(Preferences.getCustomModelPreference<LoginResponse>(requireContext(), LOGIN_DATA)?.payload?.profileImage).placeholder(R.drawable.profile_placeholder).error(R.drawable.profile_placeholder).into(binding.userImage)

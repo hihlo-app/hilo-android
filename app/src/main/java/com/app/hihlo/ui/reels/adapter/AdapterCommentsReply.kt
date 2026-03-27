@@ -1,5 +1,6 @@
 package com.app.hihlo.ui.reels.adapter
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -10,6 +11,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -32,6 +34,7 @@ class AdapterCommentsReply(
     val onReplySelect: (String) -> Unit,               // optional — if you still want inline reply
     val onDeleteClick: (replyId: Int) -> Unit,
     val onReplyProfileSelected: (user_id: Int) -> Unit,// ← new
+    val onMentionClick: (user_id: String) -> Unit
 ) : RecyclerView.Adapter<AdapterCommentsReply.ViewHolder>() {
     inner class ViewHolder(val binding: AdapterCommentsReplyBinding): RecyclerView.ViewHolder(binding.root)
 
@@ -49,14 +52,14 @@ class AdapterCommentsReply(
                 .load(replies[position].user.profile_image)
                 .placeholder(R.drawable.profile_placeholder)
                 .error(R.drawable.profile_placeholder).into(userImage)
-            name.text = replies[position].user.name
+            name.text = replies[position].user.username
 //            userId.text = replies[position].user.username
             userId.isVisible=false
             var user_id = replies?.get(position)?.user?.id
 //            userLocation.text = replies[position]?.user?.city+", "+replies[position]?.user?.country
             //comment.text = replies[position].reply
             //var data = "https://d38vqutibeq2uv.cloudfront.net/1757159096618####@@@@####@hihlo####@@@@####hloo you"
-            setRichComment(comment, replies[position].reply)
+            setRichComment(root.context, comment, replies[position])
             var user = Preferences.getCustomModelPreference<LoginResponse>(root.context, LOGIN_DATA)?.payload?.username
             val commentOwner = replies?.get(position)?.comment_owner
             val commentUser = replies?.get(position)?.user?.username
@@ -75,8 +78,7 @@ class AdapterCommentsReply(
                 reply.isVisible = true
             }
             holder.binding.root.setOnLongClickListener {
-                val allowLongClick =
-                    commentOwner == 1 || user == commentUser || user == commentOwnerUserName
+                val allowLongClick = (commentOwner == 1 || user == commentUser) || user == commentOwnerUserName
                 if (allowLongClick) {
                     RTVariable.COMMENT_POSITION = position
                     RTVariable.REPLY_POSITION = position
@@ -85,7 +87,42 @@ class AdapterCommentsReply(
                     }
                     true
                 } else {
-                    false
+                    val replyText = replies[position].reply ?: ""
+                    val isUserMentioned = replyText.contains(user.toString())
+                    if(isUserMentioned){
+                        RTVariable.COMMENT_POSITION = position
+                        RTVariable.REPLY_POSITION = position
+                        replies[position].id?.let { replyId ->
+                            onDeleteClick(replyId)
+                        }
+                        true
+                    }else{
+                        false
+                    }
+                }
+            }
+            holder.binding.comment.setOnLongClickListener {
+                val allowLongClick = (commentOwner == 1 || user == commentUser) || user == commentOwnerUserName
+                if (allowLongClick) {
+                    RTVariable.COMMENT_POSITION = position
+                    RTVariable.REPLY_POSITION = position
+                    replies[position].id?.let { replyId ->
+                        onDeleteClick(replyId)
+                    }
+                    true
+                } else {
+                    val replyText = replies[position].reply ?: ""
+                    val isUserMentioned = replyText.contains(user.toString())
+                    if(isUserMentioned){
+                        RTVariable.COMMENT_POSITION = position
+                        RTVariable.REPLY_POSITION = position
+                        replies[position].id?.let { replyId ->
+                            onDeleteClick(replyId)
+                        }
+                        true
+                    }else{
+                        false
+                    }
                 }
             }
             holder.binding.reply.setOnClickListener {
@@ -117,8 +154,13 @@ class AdapterCommentsReply(
         notifyItemRemoved(position)
     }
 
-    private fun setRichComment(textView: TextView, rawComment: String?) {
+    private fun setRichComment(context: Context, textView: TextView, reply: Replies) {
+        val scaledDensity = context.resources.displayMetrics.scaledDensity
+        val density = context.resources.displayMetrics.density
+
+        val dpValue = 13.5f * (scaledDensity / density)
         val context = textView.context
+        val rawComment = reply.reply
         if (rawComment.isNullOrEmpty()) {
             textView.text = ""
             return
@@ -128,10 +170,11 @@ class AdapterCommentsReply(
             return
         }
         val parts = rawComment.split(RTVariable.REPLY_COMBINED_IMAGE_DELEMETER)
-        if (parts.size != 3) {
+        if (parts.size < 3) {
             textView.text = rawComment
             return
         }
+        Log.e("REPLYLOG", "REPLYLOG>>> REPLY "+parts[1].trim())
         val imageUrl = parts[0].trim()
         val mention = parts[1].trim()
         val restText = parts[2].trim()
@@ -149,28 +192,36 @@ class AdapterCommentsReply(
             .placeholder(R.drawable.profile_placeholder)
             .error(R.drawable.profile_placeholder)
             .circleCrop()
-            .into(object : CustomTarget<Bitmap>(targetSize-10, targetSize) {
+            .into(object : CustomTarget<Bitmap>(targetSize - 16, targetSize) {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     val drawable = BitmapDrawable(context.resources, resource)
                     val fontMetrics = textView.paint.fontMetricsInt
                     val lineHeight = fontMetrics.bottom - fontMetrics.top
                     val verticalOffset = (lineHeight - targetSize) / 2
-                    drawable.setBounds(0, verticalOffset+5, targetSize, verticalOffset + targetSize)
+                    drawable.setBounds(0, verticalOffset + 7, targetSize, verticalOffset + targetSize)
                     val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
                     val spannable = SpannableStringBuilder(textView.text)
                     spannable.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    val mentionStart = 2                                 // after image + space
+                    val mentionStart = 2
                     val mentionEnd = mentionStart + mention.length
-                    spannable.setSpan(
-                        ForegroundColorSpan(Color.parseColor("#B90A66")),
-                        mentionStart,
-                        mentionEnd,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
+                    val clickableStart = 0
+                    val clickableEnd = mentionEnd
+                    val userIdToPass = reply.user.id ?: -1
+                    val clickableSpan = object : android.text.style.ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            onMentionClick(mention)
+                        }
+                        override fun updateDrawState(ds: android.text.TextPaint) {
+                            super.updateDrawState(ds)
+                            ds.isUnderlineText = false
+                            ds.color = Color.parseColor("#B90A66")
+                        }
+                    }
+                    spannable.setSpan(clickableSpan, clickableStart, clickableEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    textView.movementMethod = android.text.method.LinkMovementMethod.getInstance()
                     textView.text = spannable
                 }
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
+                override fun onLoadCleared(placeholder: Drawable?) {}
             })
     }
 }

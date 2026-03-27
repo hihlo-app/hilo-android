@@ -296,6 +296,10 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
                 dismiss()
                 findNavController().navigate(HomeNewFragmentDirections.actionHomeNewFragmentToProfileFragment("0", user_id.toString()))
             },
+            onMentionClick = { user_name ->
+                Log.e("onMentionClick", "onMentionClick>>> "+user_name)
+                getUserId(user_name)
+            },
             binding.commentsRecycler
         )
         hasMore = initialComments.size >= limit
@@ -424,6 +428,28 @@ class CommentReelBottomSheet : BottomSheetDialogFragment() {
 
     private fun Float.toPx(context: Context): Float {
         return this * context.resources.displayMetrics.density
+    }
+
+    private fun getUserId(user_name: String){
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = RetrofitBuilder.apiService.getUserIdByUserName(
+                    token = "Bearer " + Preferences.getCustomModelPreference<LoginResponse>(
+                        requireContext(),
+                        LOGIN_DATA
+                    )?.payload?.authToken,
+                    user_name = user_name
+                )
+                if (response.status == 1 && response.code == 200) {
+                    var user_id = response.payload.user_id
+                    dismiss()
+                    findNavController().navigate(HomeNewFragmentDirections.actionHomeNewFragmentToProfileFragment("0", user_id.toString()))
+                } else {
+                    Toast.makeText(requireContext(), response.message ?: "Failed", Toast.LENGTH_SHORT).show()
+                }
+            }catch (e: Exception) {
+            }
+        }
     }
 
     private fun getSendDeleteComment(comment_id: String, mode: Int, position: Int, post_id: String){

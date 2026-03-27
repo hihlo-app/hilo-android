@@ -17,6 +17,7 @@ import com.app.hihlo.network_call.repository.ApiRepository
 
 @HiltViewModel
 class HomeViewModel @Inject constructor():ViewModel() {
+
     private val homeLiveDate = SingleLiveEvent<Resources<HomeResponse>>()
     private val genderListLiveData = SingleLiveEvent<Resources<GenderListResponse>>()
     fun getGenderLiveData(): LiveData<Resources<GenderListResponse>> {

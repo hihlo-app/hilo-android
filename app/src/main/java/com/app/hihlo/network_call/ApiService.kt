@@ -1,5 +1,6 @@
 package com.app.hihlo.network_call
 
+import com.app.hihlo.model.GetUserIdResponse.GetUserIdByUserNameResponse
 import com.app.hihlo.model.coin_details.CoinDetailsResponse
 import com.app.hihlo.model.common_response.CommonResponse
 import com.app.hihlo.model.add_coins.AddCoinsRequest
@@ -420,6 +421,13 @@ interface ApiService {
         @Field("mode") mode: String,
         @Field("post_id") post_id: String
     ): DeleteResponse
+
+    @FormUrlEncoded
+    @POST("get-userid-by-username")
+    suspend fun getUserIdByUserName(
+        @Header("Authorization") token: String,
+        @Field("user_name") user_name: String
+    ): GetUserIdByUserNameResponse
 
 }
 

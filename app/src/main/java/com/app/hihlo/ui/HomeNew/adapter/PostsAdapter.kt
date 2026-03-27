@@ -264,10 +264,11 @@ class PostsAdapter(
                     .placeholder(R.drawable.profile_placeholder)
                     .error(R.drawable.profile_placeholder)
                     .into(userImage)
+                postImage.setImageDrawable(null)
                 postImage.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                 postImage.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                 postImage.requestLayout()
-                Glide.with(root.context).clear(postImage)
+                //Glide.with(root.context).clear(postImage)
                 Glide.with(root.context).load(post.asset_url).into(postImage)
                 val story = storiesList?.find { story -> story.user_id == post.user_id }
                 Log.e("TTTTT", "SSSSS>>> "+story)
